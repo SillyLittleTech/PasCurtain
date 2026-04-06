@@ -5,8 +5,13 @@ import 'package:http/http.dart' as http;
 
 import '../models/breach_result.dart';
 
-/// Interfaces with the Have I Been Pwned API using k-anonymity so that
-/// the full password or email is never transmitted to any remote server.
+/// Interfaces with the Have I Been Pwned API.
+///
+/// Password checks use k-anonymity: only the first 5 characters of the SHA-1
+/// hash are sent to the server; the plaintext password is never transmitted.
+///
+/// Email checks send the full email address to the HIBP breached-account
+/// endpoint and require a paid API key.
 ///
 /// Password endpoint: https://api.pwnedpasswords.com/range/{first5}
 ///   — free, no API key required.
@@ -17,13 +22,25 @@ class PwnedApiService {
   PwnedApiService({
     this.hibpApiKey,
     http.Client? httpClient,
-  }) : _client = httpClient ?? http.Client();
+  })  : _client = httpClient ?? http.Client(),
+        _ownsClient = httpClient == null;
 
   /// Optional Have I Been Pwned API key for email breach lookups.
   /// See https://haveibeenpwned.com/API/Key
   final String? hibpApiKey;
 
   final http.Client _client;
+  final bool _ownsClient;
+
+  /// Releases the internally created HTTP client.
+  ///
+  /// If a client was injected via the constructor, ownership remains with the
+  /// caller and this method does not close it.
+  void close() {
+    if (_ownsClient) {
+      _client.close();
+    }
+  }
 
   static const String _passwordRangeBase =
       'https://api.pwnedpasswords.com/range/';

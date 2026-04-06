@@ -4,7 +4,9 @@ import 'dart:math';
 ///
 /// Uses [Random.secure] so suggestions are suitable for use as real credentials.
 class PasswordGenerator {
-  PasswordGenerator({int length = 20}) : _length = length;
+  PasswordGenerator({int length = 20}) : _length = length {
+    assert(length >= 4, 'PasswordGenerator length must be at least 4.');
+  }
 
   final int _length;
 

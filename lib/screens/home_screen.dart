@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../models/breach_result.dart';
@@ -31,11 +32,18 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> _suggestions = [];
 
   final _generator = PasswordGenerator(length: 20);
+  final _httpClient = http.Client();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
     _inputController.dispose();
     _apiKeyController.dispose();
+    _httpClient.close();
     super.dispose();
   }
 
@@ -51,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final input = _inputController.text.trim();
     final apiKey =
         _apiKeyController.text.trim().isEmpty ? null : _apiKeyController.text.trim();
-    final service = PwnedApiService(hibpApiKey: apiKey);
+    final service = PwnedApiService(hibpApiKey: apiKey, httpClient: _httpClient);
 
     final result = _checkType == CheckType.password
         ? await service.checkPassword(input)

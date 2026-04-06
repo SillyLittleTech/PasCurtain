@@ -75,7 +75,6 @@ web/version.json
 
 # Firebase
 .firebase/
-firebase.json
 .firebaserc
 
 # IDE and editor files

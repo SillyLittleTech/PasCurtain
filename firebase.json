@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "site": "slf-powwow",
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

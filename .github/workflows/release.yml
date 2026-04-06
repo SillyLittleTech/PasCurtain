@@ -61,16 +61,21 @@ jobs:
       - name: Install Linux dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libssl-dev
 
       - name: Enable Linux desktop
         run: flutter config --enable-linux-desktop
+
+      - name: Ensure Linux platform files
+        run: flutter create --platforms=linux .
 
       - name: Get Flutter packages
         run: flutter pub get
 
       - name: Build Linux release
-        run: flutter build linux --release
+        run: |
+          flutter clean
+          flutter build linux --release
 
       - name: Package Linux build
         run: |
@@ -102,6 +107,9 @@ jobs:
 
       - name: Enable Windows desktop
         run: flutter config --enable-windows-desktop
+
+      - name: Ensure Windows platform files
+        run: flutter create --platforms=windows .
 
       - name: Get Flutter packages
         run: flutter pub get
@@ -139,6 +147,9 @@ jobs:
 
       - name: Enable macOS desktop
         run: flutter config --enable-macos-desktop
+
+      - name: Ensure macOS platform files
+        run: flutter create --platforms=macos .
 
       - name: Get Flutter packages
         run: flutter pub get
@@ -184,8 +195,7 @@ jobs:
         run: |
           flutter build web --release \
             --base-href "/" \
-            --pwa-strategy offline-first \
-            --web-renderer canvaskit
+            --pwa-strategy offline-first
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

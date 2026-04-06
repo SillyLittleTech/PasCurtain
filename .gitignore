@@ -34,8 +34,8 @@ doc/api/
 
 # macOS build artifacts
 macos/Pods/
-macos/Flutter/GeneratedPluginRegistrant.swift
 macos/Flutter/Flutter-Generated.xcconfig
+macos/Flutter/ephemeral/
 macos/Runner/GeneratedPluginRegistrant.swift
 
 # iOS build artifacts

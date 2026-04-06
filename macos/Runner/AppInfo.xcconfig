@@ -1,0 +1,19 @@
+// Application-level settings for the Runner target.
+//
+// This may be overridden by automatic settings via the "Build Settings" tab of
+// the Runner target in Xcode. Any values here will be used as a fallback if
+// not specified in the "Build Settings" tab.
+
+// The application's name. By default this is also the title of the main window.
+// TODO(rename): update PRODUCT_NAME when rebranding from powwow
+PRODUCT_NAME = powwow
+// The application's bundle identifier
+PRODUCT_BUNDLE_IDENTIFIER = com.sillylittletech.powwow
+// The copyright string visible to users in the About Box.
+PRODUCT_COPYRIGHT = Copyright © 2024 SillyLittleTech. All rights reserved.
+// The minimum OS version this application can run on.
+MACOSX_DEPLOYMENT_TARGET = 10.14
+// The human-readable short version string for this build
+FLUTTER_BUILD_NAME = 0.1.0
+// The build number for this build
+FLUTTER_BUILD_NUMBER = 1

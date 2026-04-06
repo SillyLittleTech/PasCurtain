@@ -1,0 +1,56 @@
+name: Deploy to Preview Channel
+
+on:
+  pull_request:
+#    branches: [ !dependabot/** ]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  build_and_preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Get Flutter packages
+        run: flutter pub get
+
+      - name: Build web release
+        run: |
+          flutter build web --release \
+            --base-href "/" \
+            --pwa-strategy offline-first \
+            --web-renderer canvaskit
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          expires: 1d
+          projectId: slf-powwow
+
+      - if: ${{ failure() }}
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            An Error Happened on Preview Deployment: A tmate debugging session spawned, check details to connect and debug.
+            This was triggered by ${{ github.sha }} on the runner @ ${{ github.run_id }}
+
+      - if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+
+      - if: ${{ failure() }}
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            ~~An Error Happened on Preview Deployment: A tmate debugging session spawned, check details to connect and debug.
+            This was triggered by ${{ github.sha }} on the runner @ ${{ github.run_id }}~~
+            Tmate session was closed

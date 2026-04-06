@@ -1,0 +1,28 @@
+name: powwow
+description: A multiplatform password and email breach checker using the pwnedpasswords API with secure password suggestions.
+publish_to: 'none'
+
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.1
+  crypto: ^3.0.3
+  provider: ^6.1.2
+  shared_preferences: ^2.2.3
+  flutter_svg: ^2.0.10+1
+  url_launcher: ^6.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icons/

@@ -184,8 +184,7 @@ jobs:
         run: |
           flutter build web --release \
             --base-href "/" \
-            --pwa-strategy offline-first \
-            --web-renderer canvaskit
+            --pwa-strategy offline-first
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

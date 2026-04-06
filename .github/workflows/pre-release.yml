@@ -197,8 +197,7 @@ jobs:
         run: |
           flutter build web --release \
             --base-href "/" \
-            --pwa-strategy offline-first \
-            --web-renderer canvaskit
+            --pwa-strategy offline-first
 
       - name: Upload web artifact
         uses: actions/upload-artifact@v4

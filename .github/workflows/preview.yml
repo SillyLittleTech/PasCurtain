@@ -27,8 +27,7 @@ jobs:
         run: |
           flutter build web --release \
             --base-href "/" \
-            --pwa-strategy offline-first \
-            --web-renderer canvaskit
+            --pwa-strategy offline-first
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:

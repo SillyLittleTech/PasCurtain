@@ -66,6 +66,9 @@ jobs:
       - name: Enable Linux desktop
         run: flutter config --enable-linux-desktop
 
+      - name: Ensure Linux platform files
+        run: flutter create --platforms=linux .
+
       - name: Get Flutter packages
         run: flutter pub get
 
@@ -103,6 +106,9 @@ jobs:
       - name: Enable Windows desktop
         run: flutter config --enable-windows-desktop
 
+      - name: Ensure Windows platform files
+        run: flutter create --platforms=windows .
+
       - name: Get Flutter packages
         run: flutter pub get
 
@@ -139,6 +145,9 @@ jobs:
 
       - name: Enable macOS desktop
         run: flutter config --enable-macos-desktop
+
+      - name: Ensure macOS platform files
+        run: flutter create --platforms=macos .
 
       - name: Get Flutter packages
         run: flutter pub get

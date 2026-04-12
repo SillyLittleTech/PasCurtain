@@ -67,10 +67,7 @@ jobs:
         run: flutter config --enable-linux-desktop
 
       - name: Ensure Linux platform files
-        run: |
-          if [ ! -d linux ]; then
-            flutter create --platforms=linux .
-          fi
+        run: flutter create --platforms=linux .
 
       - name: Get Flutter packages
         run: flutter pub get

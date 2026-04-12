@@ -22,13 +22,11 @@ class CheckTypeSelector extends StatelessWidget {
         ButtonSegment(
           value: CheckType.password,
           icon: Icon(Icons.lock_outline),
-          // TODO(rename): update segment label on rebrand
           label: Text('Password'),
         ),
         ButtonSegment(
           value: CheckType.email,
           icon: Icon(Icons.email_outlined),
-          // TODO(rename): update segment label on rebrand
           label: Text('Email'),
         ),
       ],

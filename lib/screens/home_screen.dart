@@ -91,13 +91,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        // TODO(rename): Update app name displayed in AppBar when rebranding
-        title: const Text('powwow'),
+        title: const Text('PasCurtain'),
         actions: [
           IconButton(
             icon: Icon(isDark ? Icons.light_mode_outlined : Icons.dark_mode_outlined),
             tooltip:
-                isDark ? 'Switch to light mode' : 'Switch to dark mode', // TODO(rename): update tooltip on rebrand
+                isDark ? 'Switch to light mode' : 'Switch to dark mode',
             onPressed: themeNotifier.toggle,
           ),
           const SizedBox(width: 8),
@@ -138,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // TODO(rename): Update hero headline when rebranding
+       : Update hero headline when rebranding
         Text(
           'Have you been pwned?',
           style: theme.textTheme.displaySmall?.copyWith(
@@ -146,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         const SizedBox(height: 8),
-        // TODO(rename): Update subtitle when rebranding
+       : Update subtitle when rebranding
         Text(
           'Check if your password or email address has appeared in a known data breach. '
           'Passwords use k-anonymity — only a partial hash is sent. Email addresses are sent in full.',
@@ -187,11 +186,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 keyboardType: _checkType == CheckType.email
                     ? TextInputType.emailAddress
                     : TextInputType.visiblePassword,
-                // TODO(rename): update label text on rebrand
+               : update label text on rebrand
                 decoration: InputDecoration(
                   labelText: _checkType == CheckType.password
-                      ? 'Password' // TODO(rename)
-                      : 'Email address', // TODO(rename)
+                      ? 'Password'
+                      : 'Email address',
                   prefixIcon: Icon(
                     _checkType == CheckType.password
                         ? Icons.lock_outline
@@ -204,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ? Icons.visibility_outlined
                                 : Icons.visibility_off_outlined,
                           ),
-                          tooltip: _obscureInput ? 'Show password' : 'Hide password', // TODO(rename)
+                          tooltip: _obscureInput ? 'Show password' : 'Hide password',
                           onPressed: () =>
                               setState(() => _obscureInput = !_obscureInput),
                         )
@@ -213,12 +212,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
                     return _checkType == CheckType.password
-                        ? 'Please enter a password.' // TODO(rename)
-                        : 'Please enter an email address.'; // TODO(rename)
+                        ? 'Please enter a password.'
+                        : 'Please enter an email address.';
                   }
                   if (_checkType == CheckType.email &&
                       !value.contains('@')) {
-                    return 'Please enter a valid email address.'; // TODO(rename)
+                    return 'Please enter a valid email address.';
                   }
                   return null;
                 },
@@ -236,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       )
                     : const Icon(Icons.search),
                 label: Text(
-                  // TODO(rename): update button label on rebrand
+                 : update button label on rebrand
                   _isLoading ? 'Checking…' : 'Check now',
                 ),
               ),
@@ -258,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
-        // TODO(rename): update footer attribution on rebrand
+       : update footer attribution on rebrand
         Text(
           'Powered by Have I Been Pwned (passwords) and XposedOrNot (emails). '
           'Your password is hashed locally — only the first 5 characters of the hash are sent.',

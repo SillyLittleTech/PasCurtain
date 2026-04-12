@@ -1,6 +1,4 @@
-# powwow
-
-> ⚠️ **Name note**: "powwow" is a work-in-progress name. User-facing strings in the codebase are marked with `// TODO(rename):` comments to make rebranding straightforward.
+# PasCurtain
 
 A **multiplatform** password and email breach checker — desktop (Windows, macOS, Linux) and PWA — built with Flutter. Passwords are checked using k-anonymity against the [Have I Been Pwned](https://haveibeenpwned.com/) API without ever sending your full password. Email addresses are checked via the [XposedOrNot](https://xposedornot.com/) API — no API key required.
 
@@ -24,7 +22,7 @@ This project is an extension of and spiritual successor to the archived [SillyLi
 ## Architecture
 
 ```
-powwow/
+PasCurtain/
 ├── lib/
 │   ├── main.dart                   # App entry point
 │   ├── app.dart                    # MaterialApp + theme wiring
@@ -70,8 +68,8 @@ powwow/
 
 ```bash
 # Clone the repository
-git clone https://github.com/SillyLittleTech/powwow.git
-cd powwow
+git clone https://github.com/SillyLittleTech/PasCurtain.git
+cd PasCurtain
 
 # Install dependencies
 flutter pub get
@@ -100,7 +98,7 @@ flutter build web --release --pwa-strategy offline-first
 |----------|---------|--------|
 | **Build & Release** (`release.yml`) | Push to `main` touching app files | Builds all platforms, creates a versioned GitHub Release, deploys PWA to GitHub Pages |
 | **Pre-Release** (`pre-release.yml`) | PR marked ready-for-review | Builds all platforms, creates a pre-release. Skips (with a PR comment) if a pre-release for that version already exists |
-| **Firebase Preview** (`preview.yml`) | Any PR | Deploys the web build to a Firebase Hosting preview channel (`slf-powwow`) |
+| **Firebase Preview** (`preview.yml`) | Any PR | Deploys the web build to a Firebase Hosting preview channel |
 
 Version numbers are read directly from `version:` in `pubspec.yaml` (format: `major.minor.patch+build`).
 
@@ -109,7 +107,7 @@ Version numbers are read directly from `version:` in `pubspec.yaml` (format: `ma
 ## Contributing
 
 1. Fork the repo and create a feature branch from `main`.
-2. Make your changes — all user-facing strings are annotated with `// TODO(rename):` for easy future rebranding.
+2. Make your changes.
 3. Mark your PR as **Ready for Review** to trigger a pre-release build.
 4. Once merged to `main`, a full release is built automatically.
 

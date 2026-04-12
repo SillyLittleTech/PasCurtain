@@ -8,7 +8,7 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeNotifier(),
-      child: const PowwowApp(),
+      child: const PasCurtainApp(),
     ),
   );
 }

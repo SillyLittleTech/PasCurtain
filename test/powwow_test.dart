@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:powwow/services/password_generator.dart';
-import 'package:powwow/services/pwned_api_service.dart';
-import 'package:powwow/models/breach_result.dart';
+import 'package:pas_curtain/services/password_generator.dart';
+import 'package:pas_curtain/services/pwned_api_service.dart';
+import 'package:pas_curtain/models/breach_result.dart';
 
 void main() {
   group('PasswordGenerator', () {

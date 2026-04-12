@@ -58,7 +58,6 @@ class _SafeCard extends StatelessWidget {
           children: [
             Icon(Icons.verified_user_outlined, size: 48, color: successColor),
             const SizedBox(height: 12),
-            // TODO(rename): update safe-result headline on rebrand
             Text(
               'No breaches found!',
               style: theme.textTheme.titleLarge
@@ -66,7 +65,6 @@ class _SafeCard extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            // TODO(rename): update safe-result body on rebrand
             Text(
               result.checkType == CheckType.password
                   ? 'This password does not appear in any known breach database. '
@@ -81,7 +79,6 @@ class _SafeCard extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: onReset,
               icon: const Icon(Icons.refresh),
-              // TODO(rename): update button label on rebrand
               label: const Text('Check another'),
             ),
           ],
@@ -130,7 +127,6 @@ class _PwnedCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // TODO(rename): update pwned headline on rebrand
                           Text(
                             'Breach detected!',
                             style: theme.textTheme.titleLarge?.copyWith(
@@ -141,7 +137,6 @@ class _PwnedCard extends StatelessWidget {
                           if (result.checkType == CheckType.password &&
                               result.pwnedCount > 0)
                             Text(
-                              // TODO(rename): update count description on rebrand
                               'Seen ${_formatCount(result.pwnedCount)} time${result.pwnedCount == 1 ? '' : 's'} in data breaches',
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant,
@@ -153,7 +148,6 @@ class _PwnedCard extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                // TODO(rename): update breach advice on rebrand
                 Text(
                   result.checkType == CheckType.password
                       ? 'This password has been exposed in known data breaches. '
@@ -192,7 +186,6 @@ class _PwnedCard extends StatelessWidget {
         OutlinedButton.icon(
           onPressed: onReset,
           icon: const Icon(Icons.refresh),
-          // TODO(rename): update button label on rebrand
           label: const Text('Check another'),
         ),
       ],
@@ -228,7 +221,6 @@ class _SuggestionsCard extends StatelessWidget {
                 Icon(Icons.auto_fix_high_outlined,
                     color: theme.colorScheme.primary),
                 const SizedBox(width: 8),
-                // TODO(rename): update suggestions headline on rebrand
                 Text(
                   'Suggested passwords',
                   style: theme.textTheme.titleMedium,
@@ -236,7 +228,6 @@ class _SuggestionsCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 4),
-            // TODO(rename): update suggestions description on rebrand
             Text(
               'Tap a suggestion to copy it to your clipboard.',
               style: theme.textTheme.bodySmall?.copyWith(
@@ -302,7 +293,6 @@ class _SuggestionTile extends StatelessWidget {
   void _copyToClipboard(BuildContext context) {
     Clipboard.setData(ClipboardData(text: password));
     ScaffoldMessenger.of(context).showSnackBar(
-      // TODO(rename): update copied snackbar message on rebrand
       const SnackBar(content: Text('Password copied to clipboard!')),
     );
   }
@@ -328,7 +318,6 @@ class _ErrorCard extends StatelessWidget {
             Icon(Icons.error_outline, size: 48,
                 color: theme.colorScheme.error),
             const SizedBox(height: 12),
-            // TODO(rename): update error headline on rebrand
             Text(
               'Something went wrong',
               style: theme.textTheme.titleLarge?.copyWith(
@@ -348,7 +337,6 @@ class _ErrorCard extends StatelessWidget {
             OutlinedButton.icon(
               onPressed: onReset,
               icon: const Icon(Icons.refresh),
-              // TODO(rename): update button label on rebrand
               label: const Text('Try again'),
             ),
           ],

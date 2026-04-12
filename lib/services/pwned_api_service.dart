@@ -118,7 +118,7 @@ class PwnedApiService {
       final response = await _client.get(
         uri,
         headers: {
-          'user-agent': 'powwow-app', // TODO(rename): update user-agent on rebrand
+          'user-agent': 'pascurtain-app'
         },
       );
 

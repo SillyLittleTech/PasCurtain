@@ -1,8 +1,8 @@
-name: powwow
-description: A multiplatform password and email breach checker using the pwnedpasswords API with secure password suggestions.
+name: pas_curtain
+description: PasCurtain — a multiplatform password and email breach checker using the pwnedpasswords API with secure password suggestions.
 publish_to: 'none'
 
-version: 0.1.0+1
+version: 1.1.5+1
 
 environment:
   sdk: '>=3.9.0 <4.0.0'

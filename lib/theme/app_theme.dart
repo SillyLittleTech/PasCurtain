@@ -18,7 +18,7 @@ class ThemeNotifier extends ChangeNotifier {
   }
 }
 
-/// CookieCut-inspired design system for powwow.
+/// CookieCut-inspired design system for PasCurtain.
 ///
 /// Color palette uses a warm neutral base with a teal/cyan accent that
 /// evokes security and trust. Both light and dark variants follow the

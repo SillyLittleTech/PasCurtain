@@ -83,13 +83,13 @@ jobs:
       - name: Package Linux build
         run: |
           cd build/linux/x64/release/bundle
-          tar -czf ../../../../../powwow-linux-x64.tar.gz .
+          tar -czf ../../../../../pascurtain-linux-x64.tar.gz .
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
           name: linux-build
-          path: powwow-linux-x64.tar.gz
+          path: pascurtain-linux-x64.tar.gz
           retention-days: 1
 
   # ────────────────────────────────────────────────────────────────────────────
@@ -123,13 +123,13 @@ jobs:
       - name: Package Windows build
         shell: pwsh
         run: |
-          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath powwow-windows-x64.zip
+          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath pascurtain-windows-x64.zip
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: powwow-windows-x64.zip
+          path: pascurtain-windows-x64.zip
           retention-days: 1
 
   # ────────────────────────────────────────────────────────────────────────────
@@ -168,13 +168,13 @@ jobs:
       - name: Package macOS build
         run: |
           cd build/macos/Build/Products/Release
-          zip -r ../../../../../powwow-macos.zip powwow.app
+          zip -r ../../../../../pascurtain-macos.zip PasCurtain.app
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
           name: macos-build
-          path: powwow-macos.zip
+          path: pascurtain-macos.zip
           retention-days: 1
 
   # ────────────────────────────────────────────────────────────────────────────
@@ -241,26 +241,25 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG }}
-          name: "powwow ${{ env.VERSION }} (build ${{ env.BUILD_NUMBER }})"
-          # TODO(rename): update release name format on rebrand
+          name: "PasCurtain ${{ env.VERSION }} (build ${{ env.BUILD_NUMBER }})"
           body: |
-            ## powwow v${{ env.VERSION }}+${{ env.BUILD_NUMBER }}
+            ## PasCurtain v${{ env.VERSION }}+${{ env.BUILD_NUMBER }}
 
             Automated release built from commit ${{ github.sha }}.
 
             ### Downloads
             | Platform | File |
             |----------|------|
-            | 🐧 Linux (x64) | `powwow-linux-x64.tar.gz` |
-            | 🪟 Windows (x64) | `powwow-windows-x64.zip` |
-            | 🍎 macOS | `powwow-macos.zip` |
+            | 🐧 Linux (x64) | `pascurtain-linux-x64.tar.gz` |
+            | 🪟 Windows (x64) | `pascurtain-windows-x64.zip` |
+            | 🍎 macOS | `pascurtain-macos.zip` |
             | 🌐 Web (PWA) | Deployed to GitHub Pages |
 
             ### What's new
             See the [commit history](https://github.com/${{ github.repository }}/commits/main) for details.
           prerelease: false
           files: |
-            artifacts/linux-build/powwow-linux-x64.tar.gz
-            artifacts/windows-build/powwow-windows-x64.zip
-            artifacts/macos-build/powwow-macos.zip
+            artifacts/linux-build/pascurtain-linux-x64.tar.gz
+            artifacts/windows-build/pascurtain-windows-x64.zip
+            artifacts/macos-build/pascurtain-macos.zip
           generate_release_notes: true

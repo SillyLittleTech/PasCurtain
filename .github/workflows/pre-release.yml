@@ -1,0 +1,296 @@
+name: Pre-Release (PR Ready for Review)
+
+on:
+  pull_request:
+    types:
+      - ready_for_review
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # ────────────────────────────────────────────────────────────────────────────
+  # Determine version from pubspec.yaml on the PR branch
+  # ────────────────────────────────────────────────────────────────────────────
+  version:
+    name: Read version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      build_number: ${{ steps.get_version.outputs.build_number }}
+      tag: ${{ steps.get_version.outputs.tag }}
+      prerelease_exists: ${{ steps.check_tag.outputs.exists }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Extract version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | awk '{print $2}' | cut -d'+' -f1)
+          BUILD=$(grep '^version:' pubspec.yaml | awk '{print $2}' | cut -d'+' -f2)
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "build_number=${BUILD}" >> "$GITHUB_OUTPUT"
+          echo "tag=v${VERSION}+${BUILD}-pre" >> "$GITHUB_OUTPUT"
+
+      - name: Check if pre-release tag already exists
+        id: check_tag
+        run: |
+          TAG="v$(grep '^version:' pubspec.yaml | awk '{print $2}' | cut -d'+' -f1)+$(grep '^version:' pubspec.yaml | awk '{print $2}' | cut -d'+' -f2)-pre"
+          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q "${TAG}"; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Pre-release tag ${TAG} already exists — skipping build."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Build Linux
+  # ────────────────────────────────────────────────────────────────────────────
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    needs: version
+    if: needs.version.outputs.prerelease_exists == 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libssl-dev
+
+      - name: Enable Linux desktop
+        run: flutter config --enable-linux-desktop
+
+      - name: Ensure Linux platform files
+        run: flutter create --platforms=linux .
+
+      - name: Get Flutter packages
+        run: flutter pub get
+
+      - name: Build Linux release
+        run: |
+          flutter clean
+          flutter build linux --release
+
+      - name: Package Linux build
+        run: |
+          cd build/linux/x64/release/bundle
+          tar -czf ../../../../../pascurtain-linux-x64.tar.gz .
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build-pre
+          path: pascurtain-linux-x64.tar.gz
+          retention-days: 7
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Build Windows
+  # ────────────────────────────────────────────────────────────────────────────
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    needs: version
+    if: needs.version.outputs.prerelease_exists == 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Ensure Windows platform files
+        run: flutter create --platforms=windows .
+
+      - name: Get Flutter packages
+        run: flutter pub get
+
+      - name: Build Windows release
+        run: flutter build windows --release
+
+      - name: Package Windows build
+        shell: pwsh
+        run: |
+          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath pascurtain-windows-x64.zip
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build-pre
+          path: pascurtain-windows-x64.zip
+          retention-days: 7
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Build macOS
+  # ────────────────────────────────────────────────────────────────────────────
+  build-macos:
+    name: Build macOS
+    runs-on: macos-latest
+    needs: version
+    if: needs.version.outputs.prerelease_exists == 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Enable macOS desktop
+        run: flutter config --enable-macos-desktop
+
+      - name: Ensure macOS platform files
+        run: flutter create --platforms=macos .
+
+      - name: Get Flutter packages
+        run: flutter pub get
+
+      - name: Install CocoaPods and dependencies
+        run: |
+          sudo gem install -n /usr/local/bin cocoapods
+          which pod
+          pod --version
+          pod repo update
+
+      - name: Build macOS release
+        run: flutter build macos --release
+
+      - name: Package macOS build
+        run: |
+          cd build/macos/Build/Products/Release
+          zip -r ../../../../../pascurtain-macos.zip PasCurtain.app
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-build-pre
+          path: pascurtain-macos.zip
+          retention-days: 7
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Build Web (PWA)
+  # ────────────────────────────────────────────────────────────────────────────
+  build-web:
+    name: Build Web (PWA)
+    runs-on: ubuntu-latest
+    needs: version
+    if: needs.version.outputs.prerelease_exists == 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Get Flutter packages
+        run: flutter pub get
+
+      - name: Build web release
+        run: |
+          flutter build web --release \
+            --base-href "/" \
+            --pwa-strategy offline-first
+
+      - name: Upload web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build-pre
+          path: build/web
+          retention-days: 7
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Create pre-release
+  # ────────────────────────────────────────────────────────────────────────────
+  pre-release:
+    name: Create Pre-Release
+    runs-on: ubuntu-latest
+    needs:
+      - version
+      - build-linux
+      - build-windows
+      - build-macos
+      - build-web
+    if: needs.version.outputs.prerelease_exists == 'false'
+    env:
+      TAG: ${{ needs.version.outputs.tag }}
+      VERSION: ${{ needs.version.outputs.version }}
+      BUILD_NUMBER: ${{ needs.version.outputs.build_number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*-pre'
+          path: artifacts
+
+      - name: Create pre-release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name: "PasCurtain ${{ env.VERSION }}+${{ env.BUILD_NUMBER }} (pre-release)"
+          body: |
+            ## ⚠️ Pre-release: PasCurtain v${{ env.VERSION }}+${{ env.BUILD_NUMBER }}
+
+            This is an **automated pre-release** built from PR #${{ github.event.pull_request.number }}:
+            _"${{ github.event.pull_request.title }}"_
+
+            Built from commit ${{ github.sha }} on branch `${{ github.head_ref }}`.
+
+            > **Not for production use.** This build may be unstable.
+
+            ### Downloads
+            | Platform | File |
+            |----------|------|
+            | 🐧 Linux (x64) | `pascurtain-linux-x64.tar.gz` |
+            | 🪟 Windows (x64) | `pascurtain-windows-x64.zip` |
+            | 🍎 macOS | `pascurtain-macos.zip` |
+          prerelease: true
+          files: |
+            artifacts/linux-build-pre/pascurtain-linux-x64.tar.gz
+            artifacts/windows-build-pre/pascurtain-windows-x64.zip
+            artifacts/macos-build-pre/pascurtain-macos.zip
+          generate_release_notes: false
+
+  # ────────────────────────────────────────────────────────────────────────────
+  # Notify if pre-release already exists for this version
+  # ────────────────────────────────────────────────────────────────────────────
+  notify-duplicate:
+    name: Notify duplicate pre-release
+    runs-on: ubuntu-latest
+    needs: version
+    if: needs.version.outputs.prerelease_exists == 'true'
+    steps:
+      - name: Comment on PR
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            ⚠️ **Pre-release skipped**: A pre-release for version `${{ needs.version.outputs.tag }}` already exists.
+
+            To create a new pre-release, bump the `version` in `pubspec.yaml` and re-mark this PR as ready for review.

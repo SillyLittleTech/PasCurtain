@@ -62,8 +62,8 @@ powwow/
 
 ### Prerequisites
 
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) ≥ 3.3.0
-- Dart SDK ≥ 3.3.0 (bundled with Flutter)
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) ≥ 3.35.0
+- Dart SDK ≥ 3.9.0 (bundled with Flutter)
 - Platform tools: GTK 3 headers (Linux), Xcode (macOS), Visual Studio 2022 (Windows)
 
 ### Running locally

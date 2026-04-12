@@ -87,7 +87,7 @@ flutter run -d chrome          # Web / PWA
 flutter build linux --release
 flutter build windows --release
 flutter build macos --release
-flutter build web --release --pwa-strategy offline-first
+flutter build web --release
 ```
 
 ---

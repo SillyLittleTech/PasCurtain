@@ -2,7 +2,7 @@ name: pas_curtain
 description: PasCurtain — a multiplatform password and email breach checker using the pwnedpasswords API with secure password suggestions.
 publish_to: 'none'
 
-version: 1.2.1+1
+version: 1.2.3+1
 
 environment:
   sdk: '>=3.9.0 <4.0.0'

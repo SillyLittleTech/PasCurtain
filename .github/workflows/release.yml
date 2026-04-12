@@ -199,7 +199,7 @@ jobs:
       - name: Build web release
         run: |
           flutter build web --release \
-            --base-href "/"
+            --base-href "/PasCurtain/"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

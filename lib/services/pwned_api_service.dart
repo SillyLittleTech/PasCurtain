@@ -151,12 +151,25 @@ class PwnedApiService {
       }
 
       final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+
+      // XposedOrNot returns {"Error":"Not found","email":null} with a 200 status
+      // when no breaches are found.
+      if (jsonData.containsKey('Error')) {
+        return BreachResult(
+          input: email,
+          checkType: CheckType.email,
+          isPwned: false,
+        );
+      }
+
+      // Breaches are returned as a list of single-element lists, e.g.:
+      // {"breaches":[["BreachName"]],"email":"...","status":"success"}
       final rawBreaches = jsonData['breaches'];
       final breachNames = <String>[];
       if (rawBreaches is List) {
         for (final b in rawBreaches) {
-          if (b is Map<String, dynamic>) {
-            final name = b['breach'] as String?;
+          if (b is List && b.isNotEmpty) {
+            final name = b.first?.toString();
             if (name != null) breachNames.add(name);
           }
         }

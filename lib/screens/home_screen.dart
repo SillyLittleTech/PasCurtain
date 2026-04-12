@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/breach_result.dart';
 import '../services/password_generator.dart';
@@ -247,14 +248,46 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildFooter(ThemeData theme) {
-    return Text(
-      // TODO(rename): update footer attribution on rebrand
-      'Powered by Have I Been Pwned (passwords) and XposedOrNot (emails). '
-      'Your password is hashed locally — only the first 5 characters of the hash are sent.',
-      style: theme.textTheme.bodySmall?.copyWith(
-        color: theme.colorScheme.onSurfaceVariant,
-      ),
-      textAlign: TextAlign.center,
+    final mutedStyle = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    final linkStyle = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.primary,
+      decoration: TextDecoration.underline,
+    );
+
+    return Column(
+      children: [
+        // TODO(rename): update footer attribution on rebrand
+        Text(
+          'Powered by Have I Been Pwned (passwords) and XposedOrNot (emails). '
+          'Your password is hashed locally — only the first 5 characters of the hash are sent.',
+          style: mutedStyle,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          alignment: WrapAlignment.center,
+          children: [
+            Text('A project by ', style: mutedStyle),
+            GestureDetector(
+              onTap: () => launchUrl(
+                Uri.parse('https://sillylittle.tech'),
+                mode: LaunchMode.externalApplication,
+              ),
+              child: Text('SillyLittleTech', style: linkStyle),
+            ),
+            Text('. ', style: mutedStyle),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          'Fiscally sponsored by The Hack Foundation (d.b.a. Hack Club), '
+          'a 501(c)(3) nonprofit (EIN: 81-2908499).',
+          style: mutedStyle,
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }

@@ -180,7 +180,7 @@ jobs:
       - name: Package macOS build
         run: |
           cd build/macos/Build/Products/Release
-          zip -r ../../../../../pascurtain-macos.zip powwow.app
+          zip -r ../../../../../pascurtain-macos.zip PasCurtain.app
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4

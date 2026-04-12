@@ -8,7 +8,6 @@
   <string>$(EXECUTABLE_NAME)</string>
   <key>CFBundleIconFile</key>
   <string></string>
-  <!-- TODO(rename): update CFBundleIdentifier if package name changes on rebrand -->
   <key>CFBundleIdentifier</key>
   <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
   <key>CFBundleInfoDictionaryVersion</key>

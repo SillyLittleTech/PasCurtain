@@ -34,11 +34,11 @@ static void my_application_activate(GApplication* application) {
   if (use_header_bar) {
     GtkHeaderBar* header_bar = GTK_HEADER_BAR(gtk_header_bar_new());
     gtk_widget_show(GTK_WIDGET(header_bar));
-    gtk_header_bar_set_title(header_bar, "powwow"); // TODO(rename): update window title on rebrand
+    gtk_header_bar_set_title(header_bar, "PasCurtain");
     gtk_header_bar_set_show_close_button(header_bar, TRUE);
     gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
   } else {
-    gtk_window_set_title(window, "powwow"); // TODO(rename): update window title on rebrand
+    gtk_window_set_title(window, "PasCurtain");
   }
 
   gtk_window_set_default_size(window, 1280, 720);
@@ -95,7 +95,7 @@ static void my_application_class_init(MyApplicationClass* klass) {
 static void my_application_init(MyApplication* self) {}
 
 MyApplication* my_application_new() {
-  // TODO(rename): update APPLICATION_ID if package name changes on rebrand
+  // APPLICATION_ID is defined in CMakeLists.txt
   return MY_APPLICATION(g_object_new(my_application_get_type(),
                                      "application-id", APPLICATION_ID,
                                      "flags", G_APPLICATION_NON_UNIQUE,

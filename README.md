@@ -2,7 +2,7 @@
 
 > ⚠️ **Name note**: "powwow" is a work-in-progress name. User-facing strings in the codebase are marked with `// TODO(rename):` comments to make rebranding straightforward.
 
-A **multiplatform** password and email breach checker — desktop (Windows, macOS, Linux) and PWA — built with Flutter. It uses k-anonymity to check your credentials against the [Have I Been Pwned](https://haveibeenpwned.com/) API without ever sending your full password to any server.
+A **multiplatform** password and email breach checker — desktop (Windows, macOS, Linux) and PWA — built with Flutter. Passwords are checked using k-anonymity against the [Have I Been Pwned](https://haveibeenpwned.com/) API without ever sending your full password. Email addresses are checked via the [XposedOrNot](https://xposedornot.com/) API — no API key required.
 
 This project is an extension of and spiritual successor to the archived [SillyLittleTech/Pwned](https://github.com/SillyLittleTech/Pwned) CLI tool.
 
@@ -13,7 +13,7 @@ This project is an extension of and spiritual successor to the archived [SillyLi
 | Feature | Description |
 |---------|-------------|
 | 🔐 **Password breach check** | Uses SHA-1 + k-anonymity (only the first 5 chars of the hash are sent) against the free pwnedpasswords range API — no API key needed. |
-| 📧 **Email breach check** | Checks an email address against all known HIBP breaches. Requires a [HIBP API key](https://haveibeenpwned.com/API/Key). |
+| 📧 **Email breach check** | Sends the email address to the free [XposedOrNot](https://xposedornot.com/) API — no API key needed. |
 | 💡 **Password suggestions** | When a breach is detected, generates cryptographically strong replacement passwords (random + passphrase styles). |
 | 🌗 **Dark & Light mode** | Full support for system-preferred and user-toggled themes. |
 | 🖥️ **Multiplatform** | Runs natively on Windows, macOS, and Linux; also available as a Progressive Web App (PWA) via GitHub Pages. |
@@ -33,7 +33,7 @@ powwow/
 │   ├── models/
 │   │   └── breach_result.dart      # Data model for API results
 │   ├── services/
-│   │   ├── pwned_api_service.dart  # HIBP API client (k-anonymity)
+│   │   ├── pwned_api_service.dart  # HIBP (k-anonymity) + XposedOrNot API client
 │   │   └── password_generator.dart # Secure password/passphrase generator
 │   ├── screens/
 │   │   └── home_screen.dart        # Main UI screen
@@ -54,7 +54,7 @@ powwow/
 
 - **Passwords are never sent over the network.** Only the first 5 characters of a SHA-1 hash are transmitted (k-anonymity model).
 - The HIBP range API returns hundreds of potential hash matches; the app matches locally.
-- Email checks require a paid HIBP API key entered by the user at runtime — it is never stored by the app.
+- **Email addresses are sent in full** to the XposedOrNot API to perform a breach lookup. No API key is required and no data is stored by the app.
 
 ---
 

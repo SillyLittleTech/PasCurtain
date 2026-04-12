@@ -23,7 +23,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _formKey = GlobalKey<FormState>();
   final _inputController = TextEditingController();
-  final _apiKeyController = TextEditingController();
 
   CheckType _checkType = CheckType.password;
   bool _isLoading = false;
@@ -42,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _inputController.dispose();
-    _apiKeyController.dispose();
     _httpClient.close();
     super.dispose();
   }
@@ -57,9 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     final input = _inputController.text.trim();
-    final apiKey =
-        _apiKeyController.text.trim().isEmpty ? null : _apiKeyController.text.trim();
-    final service = PwnedApiService(hibpApiKey: apiKey, httpClient: _httpClient);
+    final service = PwnedApiService(httpClient: _httpClient);
 
     final result = _checkType == CheckType.password
         ? await service.checkPassword(input)
@@ -151,8 +147,8 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 8),
         // TODO(rename): Update subtitle when rebranding
         Text(
-          'Check if your password or email address has appeared in a known data breach, '
-          'using privacy-preserving k-anonymity.',
+          'Check if your password or email address has appeared in a known data breach. '
+          'Passwords use k-anonymity — only a partial hash is sent. Email addresses are sent in full.',
           style: theme.textTheme.bodyLarge?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -226,21 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return null;
                 },
               ),
-              // Optional API key field for email checks
-              if (_checkType == CheckType.email) ...[
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _apiKeyController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    // TODO(rename): update label on rebrand
-                    labelText: 'HIBP API Key (required for email checks)',
-                    prefixIcon: Icon(Icons.vpn_key_outlined),
-                    helperText:
-                        'Get a free key at haveibeenpwned.com/API/Key',
-                  ),
-                ),
-              ],
+              // No API key field needed — email checks use XposedOrNot (free, no key required)
               const SizedBox(height: 20),
               // Submit button
               FilledButton.icon(
@@ -267,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildFooter(ThemeData theme) {
     return Text(
       // TODO(rename): update footer attribution on rebrand
-      'Powered by Have I Been Pwned. '
+      'Powered by Have I Been Pwned (passwords) and XposedOrNot (emails). '
       'Your password is hashed locally — only the first 5 characters of the hash are sent.',
       style: theme.textTheme.bodySmall?.copyWith(
         color: theme.colorScheme.onSurfaceVariant,

@@ -5,29 +5,24 @@ import 'package:http/http.dart' as http;
 
 import '../models/breach_result.dart';
 
-/// Interfaces with the Have I Been Pwned API.
+/// Interfaces with the Have I Been Pwned and XposedOrNot APIs.
 ///
 /// Password checks use k-anonymity: only the first 5 characters of the SHA-1
 /// hash are sent to the server; the plaintext password is never transmitted.
 ///
-/// Email checks send the full email address to the HIBP breached-account
-/// endpoint and require a paid API key.
+/// Email checks send the full email address to the XposedOrNot API
+/// (https://api.xposedornot.com) — free, no API key required.
 ///
 /// Password endpoint: https://api.pwnedpasswords.com/range/{first5}
 ///   — free, no API key required.
 ///
-/// Email endpoint: https://haveibeenpwned.com/api/v3/breachedaccount/{email}
-///   — requires a paid API key set via [hibpApiKey].
+/// Email endpoint: https://api.xposedornot.com/v1/check-email/{email}
+///   — free, no API key required.
 class PwnedApiService {
   PwnedApiService({
-    this.hibpApiKey,
     http.Client? httpClient,
   })  : _client = httpClient ?? http.Client(),
         _ownsClient = httpClient == null;
-
-  /// Optional Have I Been Pwned API key for email breach lookups.
-  /// See https://haveibeenpwned.com/API/Key
-  final String? hibpApiKey;
 
   final http.Client _client;
   final bool _ownsClient;
@@ -45,7 +40,7 @@ class PwnedApiService {
   static const String _passwordRangeBase =
       'https://api.pwnedpasswords.com/range/';
   static const String _emailBreachBase =
-      'https://haveibeenpwned.com/api/v3/breachedaccount/';
+      'https://api.xposedornot.com/v1/check-email/';
 
   // ─── Password check ─────────────────────────────────────────────────────────
 
@@ -103,10 +98,10 @@ class PwnedApiService {
 
   // ─── Email check ────────────────────────────────────────────────────────────
 
-  /// Checks [email] against the HIBP breached account API.
+  /// Checks [email] against the XposedOrNot breach database.
   ///
-  /// Requires a valid [hibpApiKey] to be configured; returns an error result
-  /// when no key is provided so the UI can prompt the user to add one.
+  /// No API key is required. Returns a [BreachResult] with named breaches
+  /// when found, or a clean result when the email is not in any breach.
   Future<BreachResult> checkEmail(String email) async {
     if (email.isEmpty) {
       return BreachResult(
@@ -117,26 +112,12 @@ class PwnedApiService {
       );
     }
 
-    if (hibpApiKey == null || hibpApiKey!.isEmpty) {
-      return BreachResult(
-        input: email,
-        checkType: CheckType.email,
-        isPwned: false,
-        errorMessage:
-            'An API key is required to check email addresses. '
-            'Get one at https://haveibeenpwned.com/API/Key',
-      );
-    }
-
     try {
       final encodedEmail = Uri.encodeComponent(email);
-      final uri = Uri.parse(
-        '$_emailBreachBase$encodedEmail?truncateResponse=false',
-      );
+      final uri = Uri.parse('$_emailBreachBase$encodedEmail');
       final response = await _client.get(
         uri,
         headers: {
-          'hibp-api-key': hibpApiKey!,
           'user-agent': 'powwow-app', // TODO(rename): update user-agent on rebrand
         },
       );
@@ -147,15 +128,6 @@ class PwnedApiService {
           input: email,
           checkType: CheckType.email,
           isPwned: false,
-        );
-      }
-
-      if (response.statusCode == 401) {
-        return BreachResult(
-          input: email,
-          checkType: CheckType.email,
-          isPwned: false,
-          errorMessage: 'Invalid API key. Check your HIBP API key and try again.',
         );
       }
 
@@ -178,10 +150,17 @@ class PwnedApiService {
         );
       }
 
-      final jsonData = jsonDecode(response.body) as List<dynamic>;
-      final breachNames = jsonData
-          .map((b) => (b as Map<String, dynamic>)['Name'] as String)
-          .toList();
+      final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
+      final rawBreaches = jsonData['breaches'];
+      final breachNames = <String>[];
+      if (rawBreaches is List) {
+        for (final b in rawBreaches) {
+          if (b is Map<String, dynamic>) {
+            final name = b['breach'] as String?;
+            if (name != null) breachNames.add(name);
+          }
+        }
+      }
 
       return BreachResult(
         input: email,

@@ -26,8 +26,7 @@ jobs:
       - name: Build web release
         run: |
           flutter build web --release \
-            --base-href "/" \
-            --pwa-strategy offline-first
+            --base-href "/"
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:

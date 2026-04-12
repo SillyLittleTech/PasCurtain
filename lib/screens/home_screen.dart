@@ -137,7 +137,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-       : Update hero headline when rebranding
         Text(
           'Have you been pwned?',
           style: theme.textTheme.displaySmall?.copyWith(
@@ -145,7 +144,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         const SizedBox(height: 8),
-       : Update subtitle when rebranding
         Text(
           'Check if your password or email address has appeared in a known data breach. '
           'Passwords use k-anonymity — only a partial hash is sent. Email addresses are sent in full.',
@@ -186,7 +184,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 keyboardType: _checkType == CheckType.email
                     ? TextInputType.emailAddress
                     : TextInputType.visiblePassword,
-               : update label text on rebrand
                 decoration: InputDecoration(
                   labelText: _checkType == CheckType.password
                       ? 'Password'
@@ -235,7 +232,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       )
                     : const Icon(Icons.search),
                 label: Text(
-                 : update button label on rebrand
                   _isLoading ? 'Checking…' : 'Check now',
                 ),
               ),
@@ -257,7 +253,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Column(
       children: [
-       : update footer attribution on rebrand
         Text(
           'Powered by Have I Been Pwned (passwords) and XposedOrNot (emails). '
           'Your password is hashed locally — only the first 5 characters of the hash are sent.',

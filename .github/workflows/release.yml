@@ -157,6 +157,11 @@ jobs:
       - name: Get Flutter packages
         run: flutter pub get
 
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
+          pod repo update
+
       - name: Build macOS release
         run: flutter build macos --release
 

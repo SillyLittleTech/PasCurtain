@@ -7,9 +7,9 @@ const isSafari = userAgent.includes('safari') && !userAgent.includes('chrome') &
 const config = {};
 
 // Temporary workaround for Safari 26.5 + Flutter 3.41.7 regression.
-// For Safari, force the HTML renderer to avoid a blank white page.
+// Force CanvasKit on Safari to avoid Flutter choosing an incompatible build.
 if (isSafari) {
-  config.renderer = 'html';
+  config.renderer = 'canvaskit';
 }
 
 _flutter.loader.load({

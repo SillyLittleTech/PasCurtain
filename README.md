@@ -6,6 +6,12 @@ This project is an extension of and spiritual successor to the archived [SillyLi
 
 ---
 
+> [!IMPORTANT]
+> If you see a blank white page in Safari 26.5 [21624.2.4.11.1] (macOS/iOS) while Chrome/Firefox still work, <br>
+> This appears to be an upstream Flutter/WebKit compatibility regression (reproducible with > a minimal Flutter app and not specific to PasCurtain logic). <br>
+> If there is any details discovered about this issue, it will be reported in https://github.com/SillyLittleTech/PasCurtain/issues/9. <strong>This does not affect the desktop app on macOS</strong>.
+
+
 ## Features
 
 | Feature | Description |
